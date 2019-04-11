@@ -1,0 +1,1 @@
+INSERT INTO foo (name, surname) VALUES ('Doe', 'Joe');

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DIR=`pwd`/`dirname $0`;
+TEMP_DIR=$DIR/temp
+
+rm -rf $TEMP_DIR/*
+
+if [ -f "$DIR/../composer.lock" ]; then
+	rm $DIR/../composer.lock
+fi
+
+cd $DIR/..
+composer install --no-interaction --prefer-source
+
+INTERPRET='';
+if [ "$1" == "coverage" ]; then
+    INTERPRET='phpdbg --coverage=coverage.html --coverage-src=src/'
+elif [ "$1" == "" ]; then
+	INTERPRET="php"
+else
+	INTERPRET=$@
+fi
+
+
+$DIR/../vendor/bin/tester -s -j 4 -c $DIR/data/config.ini --colors 1 -p $INTERPRET $DIR/src

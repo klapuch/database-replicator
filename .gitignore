@@ -1,0 +1,6 @@
+/vendor/
+composer.lock
+*~
+/tests/**/output/
+/coverage.html
+/tests/data/database.neon

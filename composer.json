@@ -1,0 +1,56 @@
+{
+  "name": "pmgdev/database-replicator",
+  "type": "library",
+  "description": "Clone database for each test.",
+  "homepage": "https://github.com/pmgdev/database-replicator",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Svatopluk Hastík",
+      "email": "svatopluk.hastik@csfd.cz",
+      "role": "Developer"
+    },
+    {
+      "name": "Dominik Klapuch",
+      "email": "dominik.klapuch@csfd.cz",
+      "role": "Developer"
+    },
+    {
+      "name": "Milan Matějček",
+      "email": "milan.matejcek@csfd.cz",
+      "role": "Developer"
+    },
+    {
+      "name": "Jakub Trmota",
+      "email": "jakub.trmota@csfd.cz",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "nette/utils": "^2.4 || ^3.0"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^0.11.1",
+    "nette/tester": "^2.0",
+    "tracy/tracy": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "PmgDev\\DatabaseReplicator\\": [
+        "src/"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PmgDev\\DatabaseReplicator\\": [
+        "tests/src/",
+        "tests/libs/"
+      ]
+    }
+  },
+  "suggest": {
+    "ext-pgsql": "Install extension, if you want test on PostgreSQL."
+  }
+}

@@ -1,0 +1,36 @@
+language: php
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+script:
+  - ./tests/run-tests $NTESTER_FLAGS
+
+before_script:
+  - psql -c "CREATE DATABASE replicator_test WITH ENCODING 'UTF8' LC_COLLATE='POSIX' TEMPLATE=template0" -U postgres
+
+services:
+  - postgresql
+
+jobs:
+  include:
+    - stage: Static Analysis (informative)
+      install:
+        - travis_retry composer install --no-progress --prefer-dist
+      script:
+        - ./tests/phpstan
+
+
+    - stage: Code Coverage
+      script:
+        - ./tests/run-tests phpdbg --coverage ./coverage.xml --coverage-src ./src
+      after_script:
+        - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+        - php coveralls.phar --verbose --config tests/.coveralls.yml
+
+  allow_failures:
+    - stage: Static Analysis (informative)
+    - stage: Code Coverage
+
+sudo: false
