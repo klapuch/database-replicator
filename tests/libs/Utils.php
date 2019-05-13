@@ -7,6 +7,7 @@ use Nette\Utils\Finder;
 class Utils
 {
 	public const PGSQL = 'pgsql';
+	public const MYSQL = 'mysql';
 
 	public const TEMP_DIR = __DIR__ . '/../temp';
 	public const DATA_DIR = __DIR__ . '/../data';

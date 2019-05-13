@@ -12,6 +12,7 @@ before_script:
 
 services:
   - postgresql
+  - mysql
 
 jobs:
   include:

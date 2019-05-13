@@ -51,6 +51,7 @@
     }
   },
   "suggest": {
-    "ext-pgsql": "Install extension, if you want test on PostgreSQL."
+    "ext-pgsql": "Install extension, if you want test on PostgreSQL.",
+    "ext-mysqli": "Install extension, if you want test on Mysql."
   }
 }

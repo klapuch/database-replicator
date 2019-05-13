@@ -140,6 +140,8 @@ class CommandTest extends TestCase
 	{
 		if ($platform === Utils::PGSQL) {
 			return (new Postgres\CommandFactory($command))->create($config);
+		} else if ($platform === Utils::MYSQL) {
+			return (new Mysql\CommandFactory(Utils::TEMP_DIR, $command))->create($config);
 		}
 		throw new \RuntimeException('Command factory not found.');
 	}
