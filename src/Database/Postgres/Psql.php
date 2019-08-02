@@ -37,7 +37,7 @@ class Psql
 
 		exec($this->buildCommand($config, $files), $output, $exitStatus);
 		if ($exitStatus !== 0) {
-			$files = implode(', ', (array) $files);
+			$files = implode(', ', (array) $files->getIterator());
 			throw new Exceptions\ImportFilesFailedException("Files: {$files} -> Import failed:" . PHP_EOL . implode(PHP_EOL, $output));
 		}
 
