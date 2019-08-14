@@ -37,7 +37,7 @@ class CommandTest extends TestCase
 		$dir = Utils::platformDir($platform);
 		$command->importFiles(new Files([$dir . '/structure.sql', $dir . '/data.sql']), $config);
 
-		$command->copy($config->database, $cloneDb, $config);
+		$command->copy($config, $cloneDb);
 
 		$command->importFiles(new Files(), $config);
 
@@ -93,7 +93,9 @@ class CommandTest extends TestCase
 		$data = self::createData($platform);
 		$config = self::createConfig($data);
 		$command = self::createCommand($platform, $data['command'], $config);
-		$command->copy('_xxx_', '_yyy_', $config);
+		$sourceConfig = clone $config;
+		$sourceConfig->database = '_xxx_';
+		$command->copy($sourceConfig, '_yyy_');
 	}
 
 

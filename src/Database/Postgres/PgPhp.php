@@ -23,10 +23,10 @@ class PgPhp
 	}
 
 
-	public function copy(string $sourceDb, string $cloneDb, Config $config): void
+	public function copy(Config $source, string $cloneDb): void
 	{
 		try {
-			$this->sql('CREATE DATABASE %s WITH TEMPLATE %s OWNER %s', $cloneDb, $sourceDb, $config->username);
+			$this->sql('CREATE DATABASE %s WITH TEMPLATE %s OWNER %s', $cloneDb, $source->database, $source->username);
 		} catch (CommandFailedException $e) {
 			throw new CopyCommandFailedException($e->getMessage(), $e->getCode(), $e);
 		}

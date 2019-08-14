@@ -28,9 +28,9 @@ class Command implements DatabaseReplicator\Command
 	}
 
 
-	public function copy(string $sourceDb, string $cloneDb, Config $config): void
+	public function copy(Config $source, string $cloneDb): void
 	{
-		$this->pgPhp->copy($sourceDb, $cloneDb, $config);
+		$this->pgPhp->copy($source, $cloneDb);
 	}
 
 

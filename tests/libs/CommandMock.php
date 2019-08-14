@@ -26,8 +26,9 @@ class CommandMock implements Command
 	}
 
 
-	public function copy(string $sourceDb, string $cloneDb, Config $config): void
+	public function copy(Config $source, string $cloneDb): void
 	{
+		$sourceDb = $source->database;
 		if ($sourceDb === '_test_07603fbe2b569f7a24933d3147678870' && $this->badDatabase === '') {
 			$this->badDatabase = $sourceDb;
 			throw new CopyCommandFailedException($sourceDb);

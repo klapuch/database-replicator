@@ -11,7 +11,7 @@ interface Command
 	function drop(string $database): void;
 
 
-	function copy(string $sourceDb, string $cloneDb, Config $config): void;
+	function copy(Config $source, string $cloneDb): void;
 
 
 	function existsDatabase(string $database): bool;

@@ -134,7 +134,7 @@ class Replicator
 	private function copyDatabase(string $name): Config
 	{
 		$config = $this->prefix->config();
-		$this->command->copy($this->prefix->database(), $name, $config);
+		$this->command->copy($config, $name);
 		return $config;
 	}
 
