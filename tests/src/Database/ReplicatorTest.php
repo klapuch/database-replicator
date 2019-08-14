@@ -97,6 +97,17 @@ class ReplicatorTest extends TestCase
 		Assert::same(2, count($result['removed']));
 	}
 
+
+	public function testCustomName()
+	{
+		$builder = new TestBuilder();
+		$sourceFile = $builder->sourceHash();
+		$databaseReplicator = $builder->databaseReplicator($sourceFile);
+		$cloneDb = $databaseReplicator->copy('foo')->database;
+		Assert::same('foo', $cloneDb);
+		$databaseReplicator->clearDatabases([$cloneDb]);
+	}
+
 }
 
 (new ReplicatorTest())->run();

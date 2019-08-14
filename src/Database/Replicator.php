@@ -36,9 +36,12 @@ class Replicator
 	}
 
 
-	public function copy(): Config
+	public function copy(string $name = ''): Config
 	{
-		$name = $this->databaseName();
+		$dbname = $this->databaseName();
+		if ($name === '') {
+			$name = $dbname;
+		}
 
 		try {
 			$config = $this->copyDatabase($name);
