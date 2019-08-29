@@ -81,13 +81,13 @@ class Hash
 	{
 		if ($this->md5 === '') {
 			$filePath = $this->activeFile();
-			if (!is_file($this->activeFile()) || (time() - filemtime($filePath) >= $this->expiration)) {
-				throw new Exceptions\ActiveFileNotFoundException($this->activeFile());
+			if (!is_file($filePath) || (time() - filemtime($filePath) >= $this->expiration)) {
+				throw new Exceptions\ActiveFileNotFoundException($filePath);
 			}
-			$this->md5 = (string) file_get_contents($this->activeFile());
+			$this->md5 = (string) file_get_contents($filePath);
 
 			if ($this->md5 === '') {
-				throw new Exceptions\ActiveFileNotFoundException($this->activeFile());
+				throw new Exceptions\ActiveFileNotFoundException($filePath);
 			}
 		}
 		return $this->md5;
