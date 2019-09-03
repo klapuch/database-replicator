@@ -36,13 +36,7 @@ abstract class Builder
 	}
 
 
-	final public function createDatabase(): Database
-	{
-		return new Database($this->createConnectionFactory());
-	}
-
-
-	abstract protected function createConnectionFactory(): ConnectionFactory;
+	abstract public function createDatabase(): DatabaseConnection;
 
 
 	final protected function createDatabaseReplicator(

@@ -2,40 +2,77 @@
 
 namespace PmgDev\DatabaseReplicator;
 
-class Database
-{
-	/** @var ConnectionFactory */
-	private $connectionFactory;
+use PmgDev\DatabaseReplicator\Database\Replicator;
+use PmgDev\DatabaseReplicator\Exceptions\InvalidStateException;
 
-	/** @var object|NULL custom connection */
+abstract class Database implements DatabaseConnection
+{
+	/** @var Replicator */
+	private $replicator;
+
+	/** @var Config|NULL */
+	private $config;
+
+	/** @var object|NULL */
 	private $connection;
 
 
-	public function __construct(ConnectionFactory $connectionFactory)
+	public function __construct(Replicator $replicator)
 	{
-		$this->connectionFactory = $connectionFactory;
+		$this->replicator = $replicator;
 	}
 
 
-	public function create()/*: object*/
+	public function create()/*: object php 7.2+*/
 	{
-		return $this->connection = $this->connectionFactory->create();
+		$this->config = $this->createDatabase();
+		$this->connection = $this->createConnection($this->config);
+		return $this->connection;
 	}
 
 
 	public function drop(): void
 	{
-		$this->connectionFactory->drop($this->get());
+		$this->disconnectConnection($this->getConnection());
+		$this->dropDatabase($this->getConfig());
 		$this->connection = NULL;
+		$this->config = NULL;
 	}
 
 
-	public function get()/*: object*/
+	public function getConnection()/*: object php 7.2+*/
 	{
 		if ($this->connection === NULL) {
-			throw new Exceptions\InvalidStateException('Connection does not exists, you must call create() method first.');
+			throw new InvalidStateException('Connection does not exists, you must call create() method first.');
 		}
 		return $this->connection;
 	}
+
+
+	protected function dropDatabase(Config $config): void
+	{
+		$this->replicator->drop($config->database);
+	}
+
+
+	protected function createDatabase(): Config
+	{
+		return $this->replicator->copy();
+	}
+
+
+	final protected function getConfig(): Config
+	{
+		if ($this->config === NULL) {
+			throw new InvalidStateException('Config does not exists, you must call create() method first.');
+		}
+		return $this->config;
+	}
+
+
+	abstract protected function createConnection(Config $config)/*: object php 7.2+*/;
+
+
+	abstract protected function disconnectConnection(/*: object php 7.2+*/ $connection): void;
 
 }

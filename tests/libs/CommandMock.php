@@ -32,7 +32,7 @@ class CommandMock implements Command
 		if ($sourceDb === '_test_07603fbe2b569f7a24933d3147678870' && $this->badDatabase === '') {
 			$this->badDatabase = $sourceDb;
 			throw new CopyCommandFailedException($sourceDb);
-		} else if (isset($this->databases[$sourceDb]) && $this->config === NULL) {
+		} else if ($this->config === NULL) {
 			throw new CopyCommandFailedException($sourceDb);
 		}
 		$this->badDatabase = '';

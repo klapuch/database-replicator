@@ -5,10 +5,10 @@ namespace PmgDev\DatabaseReplicator;
 use Nette\Utils\Random;
 use Tester\Assert;
 
-class ConnectionFactoryMock implements ConnectionFactory
+class ConnectionMock extends Database
 {
 
-	public function create()/*: object*/
+	protected function createConnection(Config $config)
 	{
 		$std = new \stdClass();
 		$std->name = Random::generate(10);
@@ -16,7 +16,7 @@ class ConnectionFactoryMock implements ConnectionFactory
 	}
 
 
-	public function drop(/*object*/ $connection): void
+	protected function disconnectConnection($connection): void
 	{
 		Assert::same(\stdClass::class, get_class($connection));
 	}
