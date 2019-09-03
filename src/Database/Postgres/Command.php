@@ -6,7 +6,7 @@ use PmgDev\DatabaseReplicator;
 use PmgDev\DatabaseReplicator\Config;
 use PmgDev\DatabaseReplicator\Source;
 
-class Command implements DatabaseReplicator\Command
+class Command extends DatabaseReplicator\Database\Command
 {
 	/** @var PgPhp */
 	private $pgPhp;
@@ -52,7 +52,7 @@ class Command implements DatabaseReplicator\Command
 	}
 
 
-	public function importFiles(Source\Files $filenames, Config $config): void
+	protected function commandImport(Source\Files $filenames, Config $config): void
 	{
 		$this->psql->importFiles($filenames, $config);
 	}

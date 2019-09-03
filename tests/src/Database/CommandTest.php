@@ -5,6 +5,7 @@ namespace PmgDev\DatabaseReplicator\Database;
 use Nette\Neon\Neon;
 use PmgDev\DatabaseReplicator\Command;
 use PmgDev\DatabaseReplicator\Config;
+use PmgDev\DatabaseReplicator\Exceptions\ImportFilesFailedException;
 use PmgDev\DatabaseReplicator\Source\Files;
 use PmgDev\DatabaseReplicator\Utils;
 use Tester\Assert;
@@ -96,6 +97,33 @@ class CommandTest extends TestCase
 		$sourceConfig = clone $config;
 		$sourceConfig->database = '_xxx_';
 		$command->copy($sourceConfig, '_yyy_');
+	}
+
+
+	/**
+	 * @dataProvider ../../temp/platforms.php
+	 */
+	public function testImportFailed(string $platform)
+	{
+		$data = self::createData($platform);
+		$config = self::createConfig($data);
+		$command = self::createCommand($platform, $data['command'], $config);
+		$sourceConfig = clone $config;
+
+		$copyDb = '_yyy_';
+		$copyConfig = clone $config;
+		$copyConfig->database = $copyDb;
+
+		$command->drop($copyDb);;
+		$command->copy($sourceConfig, $copyDb);
+		Assert::true($command->existsDatabase($copyDb));
+
+		Assert::exception(function() use ($platform, $command, $copyConfig) {
+			$dir = Utils::platformDir($platform);
+			$command->importFiles(new Files([$dir . '/broken.sql']), $copyConfig);
+		}, ImportFilesFailedException::class);
+
+		Assert::false($command->existsDatabase($copyDb));
 	}
 
 
