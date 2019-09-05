@@ -13,6 +13,9 @@ use Tester\TestCase;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ */
 class CommandTest extends TestCase
 {
 
