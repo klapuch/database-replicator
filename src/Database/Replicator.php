@@ -50,12 +50,7 @@ class Replicator
 			$config = $this->copyDatabase($name);
 		}
 
-		try {
-			$this->command->importFiles($this->files, $config);
-		} catch (Exceptions\ImportFilesFailedException $e) {
-			$this->command->drop($name);
-			throw $e;
-		}
+		$this->command->importFiles($this->files, $config);
 
 		return $config;
 	}

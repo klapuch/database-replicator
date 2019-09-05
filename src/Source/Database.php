@@ -3,9 +3,7 @@
 namespace PmgDev\DatabaseReplicator\Source;
 
 use PmgDev\DatabaseReplicator\Command;
-use PmgDev\DatabaseReplicator\Config;
 use PmgDev\DatabaseReplicator\Database as PDDatabase;
-use PmgDev\DatabaseReplicator\Exceptions;
 
 class Database
 {
@@ -40,20 +38,9 @@ class Database
 			return TRUE;
 		}
 		$this->command->create($config);
-		$this->importSourceFiles($config);
+		$this->command->importFiles($this->sourceHash->getFiles(), $config);
 		$this->sourceHash->commit();
 		return FALSE;
-	}
-
-
-	private function importSourceFiles(Config $config): void
-	{
-		try {
-			$this->command->importFiles($this->sourceHash->getFiles(), $config);
-		} catch (Exceptions\ImportFilesFailedException $e) {
-			$this->command->drop($config->database);
-			throw $e;
-		}
 	}
 
 }
