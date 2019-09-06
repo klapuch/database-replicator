@@ -2,7 +2,7 @@
 
 namespace PmgDev\DatabaseReplicator;
 
-interface ConnectionFactory
+interface DatabaseConnection
 {
 
 	/**
@@ -11,6 +11,9 @@ interface ConnectionFactory
 	function create()/*: object php 7.2*/;
 
 
-	function drop(/*object*/ $connection): void;
+	function drop(): void;
+
+
+	function getConnection()/*: object php 7.2*/;
 
 }

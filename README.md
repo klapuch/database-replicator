@@ -23,17 +23,19 @@ This is simple library whose prepare database for each test.
 composer require --dev pmgdev/database-replicator
 ```
 
-## How to use
+## How use our database layout
 
-Everybody can have different database layout. Here is prepared interface [ConnectionFactory](src/ConnectionFactory.php), where we must create instance of our database layout like (PDO, Doctrine, our implementation etc.) We need one connection with the permission to create and to drop database. And secondary connection for standard to use.
+Everybody can have different database layout. Here is prepared interface [DatabaseConnection](src/DatabaseConnection.php). What we use in our tests. Or we can extend prepared abstract class [Database](src/Database.php). Where method create your instance of our database layout like (PDO, Doctrine, our implementation etc.).
 
-1) we implement [ConnectionFactory](src/ConnectionFactory.php)
+We need one connection with the permission for create and to drop database. And secondary connection for standard to use.
 
+1) we implement [DatabaseConnection](src/DatabaseConnection.php) or we can use prepared abstract class [Database](src/Database.php).
+    - this new class we used in tests
     - we need create dependency on [Database\Replicator](src/Database/Replicator.php)
-        - method **copy()** for create new database
-        - method **drop()** for remove used database
+    - method **create()** must create your database connection, let's save Config for import files
+    - method **drop()** disconnect connection and drop database
 
-2) here is prepared [Builder](src/Builder.php), we can extend it and implement method **createConnectionFactory**, where return our implementation from point 1)
+2) here is prepared [Builder](src/Builder.php), we can extend it and implement method **createDatabase**, where return our implementation from point 1)
 
 #### Example
 
@@ -42,29 +44,19 @@ ConnectionFactory
 <?php
 
 use PmgDev\DatabaseReplicator;
+use PmgDev\DatabaseReplicator\Config;
 
-class MyConnectionFactory implements PmgDev\DatabaseReplicator\ConnectionFactory 
+class MyConnectionDatabase extends DatabaseReplicator\Database
 {
-	/** @var DatabaseReplicator\Database\Replicator */
-	private $databaseReplicator;
 
-
-	public function __construct(DatabaseReplicator\Database\Replicator $databaseReplicator)
+	public function createConnection(Config $config): object
 	{
-		$this->databaseReplicator = $databaseReplicator;  
+		return new MyConnection($config);
 	}
 
-	public function create(): object
+	public function disconnectConnection($connection): void
 	{
-		$config = $this->databaseReplicator->copy();
-		return MyConnection($config);
-	}
-
-	public function drop($connection): void
-	{
-		$db = $connection->getDatabase();
 		$connection->diconnect();
-		$this->databaseReplicator->drop($db);
 	}
 
 }
@@ -79,7 +71,7 @@ use PmgDev\DatabaseReplicator\Source;
 class MyBuilder extends PmgDev\DatabaseReplicator\Builder 
 {
 
-	protected function createConnectionFactory(): PmgDev\DatabaseReplicator\ConnectionFactory 
+	protected function createDatabase(): PmgDev\DatabaseReplicator\DatabaseConnection 
 	{
 		// these instances of Files are optional
 		
@@ -92,7 +84,7 @@ class MyBuilder extends PmgDev\DatabaseReplicator\Builder
 		$dynamicFiles = new Source\Files;
 		$dynamicFiles->addFile('dynamic.data.sql');
 		
-		return MyConnectionFactory($this->createDatabaseReplicator($files, $dynamicFiles));
+		return MyConnectionDatabase($this->createDatabaseReplicator($files, $dynamicFiles));
 	}
 
 }

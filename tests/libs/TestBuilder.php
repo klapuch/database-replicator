@@ -48,9 +48,9 @@ class TestBuilder extends Builder
 	}
 
 
-	protected function createConnectionFactory(): ConnectionFactory
+	public function createDatabase(): DatabaseConnection
 	{
-		return new ConnectionFactoryMock();
+		return new ConnectionMock($this->createDatabaseReplicator());
 	}
 
 
