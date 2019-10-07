@@ -11,7 +11,7 @@ final class Files implements \IteratorAggregate, \Countable
 	private $files = [];
 
 
-	public function __construct(array $files = [])
+	public function __construct(iterable $files = [])
 	{
 		$this->addFiles($files);
 	}
